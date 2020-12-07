@@ -20,7 +20,7 @@ const server = express();
 server.use(bodyParser.urlencoded({ extended: true }));
 server.use(express.json());
 
-server.post("/", function (request, response) {
+server.post("/api", function (request, response) {
   console.log(request.body);
   const msg = {
     to: process.env.RECEIVER,
@@ -44,4 +44,4 @@ server.post("/", function (request, response) {
   response.status(200).send();
 });
 
-server.listen(80);
+module.exports = server;
