@@ -20,7 +20,7 @@ const server = express();
 server.use(bodyParser.urlencoded({ extended: true }));
 server.use(express.json());
 
-server.post("/api", function (request, response) {
+server.post("/api", async function (request, response) {
   console.log(request.body);
   const msg = {
     to: process.env.RECEIVER,
@@ -29,19 +29,20 @@ server.post("/api", function (request, response) {
     text: JSON.stringify(request.body),
     html: JSON.stringify(request.body),
   };
-  (async () => {
+  let res = "done";
+  await (async () => {
     try {
       await sgMail.send(msg);
     } catch (error) {
-      console.error(error);
+      res = JSON.stringify(error);
 
       if (error.response) {
-        console.error(error.response.body);
+        res = error.response.body;
       }
     }
   })();
 
-  response.status(200).send();
+  response.status(200).send(res);
 });
 
 module.exports = server;
